@@ -1,0 +1,1 @@
+About calc main program and calc library
