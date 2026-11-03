@@ -5,7 +5,7 @@
 int main() {
   stdio_init_all(); // init standart i/o
 
-  while (!stdio_usb_connected()) { // wait until usb serial connected
+  while (!stdio_usb_connected()) { // wait until usb connected
     sleep_ms(100);
   }
 
