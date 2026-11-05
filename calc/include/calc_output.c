@@ -53,7 +53,10 @@ void save_history(const char *str) {
 }
 
 void clear_history(void) {
-  // TODO
+  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
+    free(history[i]);
+    history[i] = NULL;
+  }
 }
 
 void recalculate(void) {
