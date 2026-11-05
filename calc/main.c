@@ -36,9 +36,7 @@ uint8_t main(void) {
       if (input_len > 0) {
         // parse input
         if (parse_input(user_input, input_len)){
-          if (!execute_command()) {
-            return 0; // exit when q pressed
-          }
+          if (!execute_command()) return 0; // exit when q pressed
         } else {
           printf("Invalid command, try again\n");
           continue;
