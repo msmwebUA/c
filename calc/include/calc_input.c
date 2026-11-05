@@ -1,4 +1,5 @@
 #include "calc_input.h"
+#include "calc_output.h"
 #include <ctype.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -50,8 +51,9 @@ bool parse_input(const char *user_input, const uint8_t input_len) {
     return true;
   }
   // math expression
-  if (input_len > 3) {
-    return parse_operation(user_input);
+  if (input_len > 3 && parse_operation(user_input)) {
+    save_history(user_input);
+    return true;
   }
   // otherwize invalid input
   return false;
