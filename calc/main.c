@@ -1,5 +1,3 @@
-// Pico integer calculator
-
 #include <stdio.h>
 #include <stdint.h>
 #include "pico/stdlib.h"
@@ -16,10 +14,8 @@ void setup(void) {
   print_welcome();
 }
 
-uint8_t main(void) {
+int main(void) {
   setup();
-
-  char user_input[USER_INPUT_MAX_SIZE];
 
   // main loop
   while(1) {
