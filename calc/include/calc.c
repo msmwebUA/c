@@ -30,6 +30,6 @@ int64_t divide(void) {
   return parsed.arg1 / parsed.arg2;
 }
 
-int64_t module(void) {
+int64_t modulo(void) {
   return parsed.arg1 % parsed.arg2;
 }

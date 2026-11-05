@@ -7,7 +7,7 @@
 void print_welcome(void) {
   printf("--- Welcome to Integer Calculation program! ---\n");
   printf("Usage example: input \"x + y\" and press enter to get result (x and y must be positive integers).\n");
-  printf("Acceptable actions: add, substruct, multiply, divide and module.\n");
+  printf("Acceptable actions: add, subtract, multiply, divide and modulo.\n");
   printf("Use \"i\" command for more details.\n");
   printf("Use \"q\" for exit.\n");
 }
@@ -15,14 +15,14 @@ void print_welcome(void) {
 void print_commands(void) {
   printf("\"i\" - print info\n");
   printf("\"q\" - exit\n");
-  printf("\"h\" - show hostory\n");
+  printf("\"h\" - show history\n");
   printf("\"c\" - clear history\n");
   printf("\"!x\" - recalculate history row x (x is row number 1..10)\n");
-  printf("Acceptable calculation actions: add (+), substruct (-), multiply (*), divide (/) and module (%%).\n");
+  printf("Acceptable calculation actions: add (+), subtract (-), multiply (*), divide (/) and modulo (%%).\n");
   printf("Usage example: type x+y and press enter (x and y are positive integers).\n");
   printf("Limits:\n");
-  printf("\t- max supported argument is 32 bit unsigned integer (positive 2^32 - 1)\n");
-  printf("\t- max supported result is 64 bit signed integer (positive or negative 2^63 - 1))\n");
+  printf("\t- max supported argument is a 32 bit unsigned integer (2^32 - 1)\n");
+  printf("\t- max supported result is a 64 bit signed integer (from -2^63 to 2^63 - 1)\n");
   printf("\t- user input max length is 21 chars\n");
 }
 
@@ -107,9 +107,9 @@ bool execute_command(void) {
       }
       res = divide();
       break;
-    // module
+    // modulo
     case '%':
-      res = module();
+      res = modulo();
       break;
     // otherwize
     default:
