@@ -2,23 +2,29 @@
 #include "include/calc_output.h"
 #include <stdio.h>
 #include <stdint.h>
+
+#ifdef PICO_ON_DEVICE
 #include "pico/stdlib.h"
 #include "pico/stdio_usb.h"
 
 void setup(void) {
   stdio_init_all();
-
+  
   while(!stdio_usb_connected()) {
     sleep_ms(100);
   }
-
+  
   printf("Connection to Pico established\n");
-  // print welcome message
-  print_welcome();
 }
+#endif
 
 int main(void) {
+  #ifdef PICO_ON_DEVICE
   setup();
+  #endif
+
+  // print welcome message
+  print_welcome();
 
   char user_input[USER_INPUT_MAX_SIZE];
 
