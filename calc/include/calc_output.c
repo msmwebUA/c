@@ -29,10 +29,10 @@ void print_commands(void) {
 void print_history(void) {
   uint8_t counter = 0;
   printf("History:\n");
-  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
+  for (int8_t i = HISTORY_SIZE - 1; i >= 0 ; i--) {
     if (history[i] != NULL) {
-      printf("%u: %s\n", i + 1, history[i]);
       counter++;
+      printf("%u: %s\n", counter, history[i]);
     }
   }
   if (counter == 0) {
@@ -46,8 +46,15 @@ void recalculate(void) {
     printf("Row number must be from 1 to 10\n");
     return;
   }
+  // get actual size of history
+  uint8_t index = 0;
+  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
+    if (history[i] != NULL) {
+      index++;
+    }
+  }
   // recalc
-  uint8_t index = parsed.arg1 - 1;
+  index = index - parsed.arg1;
   if (history[index] != NULL) { // history row exists
     if (parse_operation(history[index])) {
       execute_command();
@@ -79,7 +86,7 @@ bool execute_command(void) {
     // show calculated row
     case '!':
       recalculate();
-      break;
+      return true;
     // add
     case '+':
       res = add();
@@ -119,7 +126,7 @@ bool execute_command(void) {
   if (int_overflow(res)) {
     printf("Buffer overflow. Use smaller numbers\n");
   } else {
-    printf("%lli\n", res);
+    printf("Result: %lli\n", res);
   };
 
   // clear content

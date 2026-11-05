@@ -82,7 +82,7 @@ bool parse_uint32(const char *str, uint32_t *result) {
   // check overflow
   if (errno == ERANGE || value > UINT32_MAX || str[0] == '-') return false;
   *result = (uint32_t)value;
-  printf("Parsed value: %u\n", *result);
+  // printf("Parsed value: %u\n", *result);
   return true;
 }
 
@@ -158,12 +158,12 @@ void save_history(const char *str) {
   }
   *ptr = '\0';
   // remove oldest
-  free(history[0]);
-  // shift older entries and add new (LIFO)
-  for (uint8_t i = 0; i < HISTORY_SIZE - 1; i++) {
-    history[i] = history[i + 1];
+  free(history[HISTORY_SIZE - 1]);
+  // shift older entries and add new (FILO)
+  for (uint8_t i = HISTORY_SIZE - 1; i > 0 ; i--) {
+    history[i] = history[i - 1];
   }
-  history[HISTORY_SIZE - 1] = new_entry_ptr;
+  history[0] = new_entry_ptr;
 }
 
 void clear_history(void) {
