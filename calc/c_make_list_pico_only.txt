@@ -1,3 +1,5 @@
+# cmake -S . -B build -DPICO_BOARD=pico2_w
+# cmake --build build
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -34,4 +36,3 @@ pico_enable_stdio_uart(calc 0)
 
 # Generate UF2, BIN and other output files
 pico_add_extra_outputs(calc)
-
