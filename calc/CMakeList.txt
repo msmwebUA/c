@@ -14,10 +14,17 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 # Create executable
-add_executable(calc main.c)
+add_executable(calc 
+  main.c
+  include/calc.c
+  include/calc_output.c
+  include/calc_input.c
+)
 
 # Link Pico standard library
-target_link_libraries(calc pico_stdlib)
+target_link_libraries(calc 
+  pico_stdlib
+)
 
 # Enable USB serial output
 pico_enable_stdio_usb(calc 1)
