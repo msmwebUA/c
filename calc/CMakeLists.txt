@@ -1,5 +1,7 @@
+# BUILD FOR MAC
 # cmake -S . -B build-mac -DBUILD_FOR_PICO=OFF
 # cmake --build build-mac
+# BUILD FOR PICO
 # or cmake -S . -B build-pico -DBUILD_FOR_PICO=ON -DPICO_BOARD=pico2_w
 # cmake --build build-pico
 
