@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include "calc_output.h"
 #include "calc_input.h"
 #include "calc.h"
+
+char *history[HISTORY_SIZE] = {0}; // array of pointers to strings
 
 void print_welcome(void) {
   printf("--- Welcome to Integer Calculation program! ---\n");
@@ -21,15 +24,32 @@ void print_commands(void) {
   printf("\"!x\" - recalculate history row x (x is row number 1..10)\n");
   printf("Acceptable calculation actions: add (+), substruct (-), multiply (*), divide (/) and module (%%)\n");
   printf("Usage example: type x+y and press enter (x and y are integers)\n");
-  printf("Limits: max supported integer (argument or result) is 64 bit (positive or negative 2^63)\n");
+  printf("Limits:\n");
+  printf("\t- max supported integer (argument or result) is 64 bit (positive or negative 2^63)\n");
+  printf("\t- user input max length is 25 chars\n");
 }
 
 void print_history(void) {
   // TODO
 }
 
-void save_history(void) {
-  // TODO
+void save_history(const char *str) {
+  // allocate memory to new string
+  char *new_entry_ptr = malloc((len_str(str) + 1));
+  if (new_entry_ptr == NULL) return;
+  // copy user input to new slot
+  char *ptr = new_entry_ptr; // new_entry_ptr leaves untouched and link to first char in string
+  while(*str) {
+    *ptr++ = *str++;
+  }
+  *ptr = '\0';
+  // remove oldest
+  free(history[0]);
+  // shift older entries and add new (LIFO)
+  for (uint8_t i = 0; i < HISTORY_SIZE - 1; i++) {
+    history[i] = history[i + 1];
+  }
+  history[HISTORY_SIZE - 1] = new_entry_ptr;
 }
 
 void clear_history(void) {
@@ -100,9 +120,6 @@ bool execute_command(void) {
   } else {
     printf("%lli", res);
   };
-  
-  // save history
-  save_history();
 
   // clear content
   parsed = (ParsedInput){0}; // same as parsed.command = '\0'; parsed.arg1 = 0; parsed.arg2 = 0;
