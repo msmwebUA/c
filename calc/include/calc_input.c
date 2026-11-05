@@ -44,8 +44,7 @@ bool parse_input(const char *user_input, const uint8_t input_len) {
     parsed.command = user_input[0];
     return true;
   }
-  // char *input = user_input; // this helps to keep pointer to start of user_input unchanged
-  // recalc command with argument (integer from 1 to 10)
+  // recalc command with argument
   if ( input_len > 1 && input_len < 4 && user_input[0] == '!' && parse_int64(user_input + 1, &parsed.arg1) ) { // user_input + 1 gives address of string after '!' char (starts from second char)
     parsed.command = user_input[0];
     return true;
@@ -87,29 +86,36 @@ bool parse_int64(const char *str, int64_t *result) {
 }
 
 bool parse_operation(const char *str) {
+  const char *source = str;
   uint8_t occurrences = 0;
   uint8_t oper_index = 0;
-  uint8_t last_index = -1;
-  char operator;
+  uint8_t length = 0;
+  char operator = '\0';
   while(*str) {
-    last_index++;
     if (is_valid_operator(*str)) {
       operator = *str;
-      oper_index = last_index;
+      oper_index = length;
       occurrences++;
     }
+    str++;
+    length++;
   }
   // one operator in the middle of the string 
-  if (occurrences == 1 && oper_index != 0 && oper_index != last_index) {
-    // extract arguments, convert them into integers and set to parsed struct
-    char res1[13];
-    char res2[13];
-    if (slice_str(str, 0, oper_index - 1, res1, sizeof(res1)) && slice_str(str, oper_index + 1, last_index, res2, sizeof(res2))) {
-      parsed.command = operator;
-      return parse_int64(res1, &parsed.arg1) && parse_int64(res2, &parsed.arg2);
-    }
+  if (occurrences != 1 || oper_index == 0 || oper_index == length - 1) return false;
+
+  char res1[13] = {0};
+  char res2[13] = {0};
+  
+  if (!slice_str(start, 0, oper_index - 1, res1, sizeof(res1)) ||
+      !slice_str(start, oper_index + 1, length - 1, res2, sizeof(res2))) {
+      return false;
   }
-  return false;
+  if (!parse_int64(res1, &parsed.arg1) ||
+      !parse_int64(res2, &parsed.arg2)) {
+      return false;
+  }
+  parsed.command = operator;
+  return true;
 }
 
 uint8_t slice_str(const char *source, uint8_t index_from, uint8_t index_to, char *result, uint8_t max_result_size) {
