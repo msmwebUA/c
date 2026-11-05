@@ -6,7 +6,6 @@
 void print_welcome(void);
 void print_commands(void);
 void print_history(void);
-void save_history(const char *str);
 void clear_history(void);
 void recalculate(void);
 bool execute_command(void);

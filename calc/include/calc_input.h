@@ -21,5 +21,6 @@ bool parse_int64(const char *str, int64_t *result);
 bool parse_operation(const char *str);
 uint8_t slice_str(const char *source, uint8_t index_from, uint8_t index_to, char *result, uint8_t max_result_size);
 uint8_t len_str(const char *str);
+void save_history(const char *str);
 
 #endif

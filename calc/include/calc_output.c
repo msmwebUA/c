@@ -37,25 +37,6 @@ void print_history(void) {
   }
 }
 
-void save_history(const char *str) {
-  // allocate memory to new string
-  char *new_entry_ptr = malloc((len_str(str) + 1));
-  if (new_entry_ptr == NULL) return;
-  // copy user input to new slot
-  char *ptr = new_entry_ptr; // new_entry_ptr leaves untouched and link to first char in string
-  while(*str) {
-    *ptr++ = *str++;
-  }
-  *ptr = '\0';
-  // remove oldest
-  free(history[0]);
-  // shift older entries and add new (LIFO)
-  for (uint8_t i = 0; i < HISTORY_SIZE - 1; i++) {
-    history[i] = history[i + 1];
-  }
-  history[HISTORY_SIZE - 1] = new_entry_ptr;
-}
-
 void clear_history(void) {
   for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
     free(history[i]);
@@ -64,7 +45,15 @@ void clear_history(void) {
 }
 
 void recalculate(void) {
-  // TODO
+  // argument (history row) must be integer from 1 to 10
+  if (parsed.arg1 < 1 || parsed.arg1 > 10) {
+    printf("Row number must be from 1 to 10\n");
+    return;
+  }
+  // recalc
+  if (history[parsed.arg1 - 1] != NULL) {
+    history[parsed.arg1 - 1]
+  }
 }
 
 bool execute_command(void) {

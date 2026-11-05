@@ -145,3 +145,22 @@ uint8_t len_str(const char *str) {
   }
   return len;
 }
+
+void save_history(const char *str) {
+  // allocate memory to new string
+  char *new_entry_ptr = malloc((len_str(str) + 1));
+  if (new_entry_ptr == NULL) return;
+  // copy user input to new slot
+  char *ptr = new_entry_ptr; // new_entry_ptr leaves untouched and link to first char in string
+  while(*str) {
+    *ptr++ = *str++;
+  }
+  *ptr = '\0';
+  // remove oldest
+  free(history[0]);
+  // shift older entries and add new (LIFO)
+  for (uint8_t i = 0; i < HISTORY_SIZE - 1; i++) {
+    history[i] = history[i + 1];
+  }
+  history[HISTORY_SIZE - 1] = new_entry_ptr;
+}
