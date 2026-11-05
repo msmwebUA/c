@@ -1,6 +1,8 @@
 #ifndef CALC_INPUT_H
 #define CALC_INPUT_H
 
+#define USER_INPUT_MAX_SIZE 26
+
 typedef struct {
   char command;
   int64_t arg1;

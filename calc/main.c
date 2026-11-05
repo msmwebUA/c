@@ -7,9 +7,6 @@
 #include "include/calc_input.h"
 #include "include/calc_output.h"
 
-#define USER_INPUT_MAX_SIZE 26
-
-
 void setup(void) {
   while(!stdio_usb_connected()) {
     sleep_ms(100);
