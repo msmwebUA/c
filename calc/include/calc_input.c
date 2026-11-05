@@ -164,3 +164,10 @@ void save_history(const char *str) {
   }
   history[HISTORY_SIZE - 1] = new_entry_ptr;
 }
+
+void clear_history(void) {
+  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
+    free(history[i]);
+    history[i] = NULL;
+  }
+}

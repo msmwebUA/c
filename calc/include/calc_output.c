@@ -37,13 +37,6 @@ void print_history(void) {
   }
 }
 
-void clear_history(void) {
-  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
-    free(history[i]);
-    history[i] = NULL;
-  }
-}
-
 void recalculate(void) {
   // argument (history row) must be integer from 1 to 10
   if (parsed.arg1 < 1 || parsed.arg1 > 10) {
