@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <errno.h>
-#include <limits.h>
 
 const char commands[] = {
   'c', // clean history
@@ -80,7 +79,10 @@ bool parse_uint32(const char *str, uint32_t *result) {
   // no digits found or unexpected characters
   if (endptr == str || *endptr != '\0') return false;
   // check overflow
-  if (errno == ERANGE || value > UINT32_MAX || str[0] == '-') return false;
+  if (errno == ERANGE || value > UINT32_MAX || str[0] == '-') {
+    printf("Unacceptable argument\n");
+    return false;
+  }
   *result = (uint32_t)value;
   // printf("Parsed value: %u\n", *result);
   return true;
@@ -101,12 +103,10 @@ bool parse_operation(const char *str) {
     str++;
     length++;
   }
-  // one operator in the middle of the string 
+  // must be only one operator in the middle of the string 
   if (occurrences != 1 || oper_index == 0 || oper_index == length - 1) return false;
-
   char res1[13] = {0};
   char res2[13] = {0};
-  
   if (!slice_str(source, 0, oper_index - 1, res1, sizeof(res1)) ||
       !slice_str(source, oper_index + 1, length - 1, res2, sizeof(res2))) {
       return false;
