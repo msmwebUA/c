@@ -30,7 +30,11 @@ void print_commands(void) {
 }
 
 void print_history(void) {
-  // TODO
+  for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
+    if (history[i] != NULL) {
+      printf("%u: %s\n", i + 1, history[i]);
+    }
+  }
 }
 
 void save_history(const char *str) {
