@@ -1,7 +1,8 @@
 #ifndef CALC_OUTPUT_H
 #define CALC_OUTPUT_H
 
-#define HISTORY_SIZE 10
+#include <stdbool.h>
+#include <stdint.h>
 
 void print_welcome(void);
 void print_commands(void);

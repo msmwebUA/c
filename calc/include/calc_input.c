@@ -1,9 +1,7 @@
 #include "calc_input.h"
-#include "calc_output.h"
-#include <ctype.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <errno.h>
 #include <limits.h>
 
@@ -23,6 +21,8 @@ const char operators[] = {
 };
 
 ParsedInput parsed = {0}; // init instance with empty values
+
+char *history[HISTORY_SIZE] = {0};
 
 bool is_valid_command(const char command) {
   for (uint8_t i = 0; i < sizeof(commands); i++) {
@@ -45,12 +45,12 @@ bool parse_input(const char *user_input, const uint8_t input_len) {
     return true;
   }
   // recalc command with argument
-  if ( input_len > 1 && input_len < 4 && user_input[0] == '!' && parse_int64(user_input + 1, &parsed.arg1) ) { // user_input + 1 gives address of string after '!' char (starts from second char)
+  if ( input_len > 1 && input_len < 4 && user_input[0] == '!' && parse_uint32(user_input + 1, &parsed.arg1) ) { // user_input + 1 gives address of string after '!' char (starts from second char)
     parsed.command = user_input[0];
     return true;
   }
   // math expression
-  if (input_len > 3 && parse_operation(user_input)) {
+  if (input_len >= 3 && parse_operation(user_input)) {
     save_history(user_input);
     return true;
   }
@@ -73,15 +73,16 @@ uint8_t remove_whitespaces(char *user_input) {
   return str_len;
 }
 
-bool parse_int64(const char *str, int64_t *result) {
+bool parse_uint32(const char *str, uint32_t *result) {
   char *endptr;
   errno = 0;
-  long long value = strtoll(str, &endptr, 10);
+  unsigned long long value = strtoull(str, &endptr, 10);
   // no digits found or unexpected characters
   if (endptr == str || *endptr != '\0') return false;
   // check overflow
-  if (errno == ERANGE || value < LLONG_MIN || value > LLONG_MAX) return false;
-  *result = (int64_t)value;
+  if (errno == ERANGE || value > UINT32_MAX || str[0] == '-') return false;
+  *result = (uint32_t)value;
+  printf("Parsed value: %u\n", *result);
   return true;
 }
 
@@ -106,12 +107,12 @@ bool parse_operation(const char *str) {
   char res1[13] = {0};
   char res2[13] = {0};
   
-  if (!slice_str(start, 0, oper_index - 1, res1, sizeof(res1)) ||
-      !slice_str(start, oper_index + 1, length - 1, res2, sizeof(res2))) {
+  if (!slice_str(source, 0, oper_index - 1, res1, sizeof(res1)) ||
+      !slice_str(source, oper_index + 1, length - 1, res2, sizeof(res2))) {
       return false;
   }
-  if (!parse_int64(res1, &parsed.arg1) ||
-      !parse_int64(res2, &parsed.arg2)) {
+  if (!parse_uint32(res1, &parsed.arg1) ||
+      !parse_uint32(res2, &parsed.arg2)) {
       return false;
   }
   parsed.command = operator;
@@ -170,4 +171,5 @@ void clear_history(void) {
     free(history[i]);
     history[i] = NULL;
   }
+  printf("History cleared\n");
 }

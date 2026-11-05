@@ -1,19 +1,15 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include "calc_output.h"
 #include "calc_input.h"
 #include "calc.h"
-
-char *history[HISTORY_SIZE] = {0}; // array of pointers to strings
+#include <stdio.h>
+#include <stdlib.h>
 
 void print_welcome(void) {
   printf("--- Welcome to Integer Calculation program! ---\n");
-  printf("Usage example: input \"x + y\" and press enter to get result. Max two integers allowed.\n");
-  printf("Acceptable actions: add, substruct, multiply, divide and module\n");
-  printf("Use \"i\" command for details\n");
-  printf("Use \"q\" for exit\n");
+  printf("Usage example: input \"x + y\" and press enter to get result (x and y must be positive integers).\n");
+  printf("Acceptable actions: add, substruct, multiply, divide and module.\n");
+  printf("Use \"i\" command for more details.\n");
+  printf("Use \"q\" for exit.\n");
 }
 
 void print_commands(void) {
@@ -22,30 +18,42 @@ void print_commands(void) {
   printf("\"h\" - show hostory\n");
   printf("\"c\" - clear history\n");
   printf("\"!x\" - recalculate history row x (x is row number 1..10)\n");
-  printf("Acceptable calculation actions: add (+), substruct (-), multiply (*), divide (/) and module (%%)\n");
-  printf("Usage example: type x+y and press enter (x and y are integers)\n");
+  printf("Acceptable calculation actions: add (+), substruct (-), multiply (*), divide (/) and module (%%).\n");
+  printf("Usage example: type x+y and press enter (x and y are positive integers).\n");
   printf("Limits:\n");
-  printf("\t- max supported integer (argument or result) is 64 bit (positive or negative 2^63)\n");
-  printf("\t- user input max length is 25 chars\n");
+  printf("\t- max supported argument is 32 bit unsigned integer (positive 2^32 - 1)\n");
+  printf("\t- max supported result is 64 bit signed integer (positive or negative 2^63 - 1))\n");
+  printf("\t- user input max length is 21 chars\n");
 }
 
 void print_history(void) {
+  uint8_t counter = 0;
+  printf("History:\n");
   for (uint8_t i = 0; i < HISTORY_SIZE; i++) {
     if (history[i] != NULL) {
       printf("%u: %s\n", i + 1, history[i]);
+      counter++;
     }
+  }
+  if (counter == 0) {
+    printf("Sorry, history is empty\n");
   }
 }
 
 void recalculate(void) {
   // argument (history row) must be integer from 1 to 10
-  if (parsed.arg1 < 1 || parsed.arg1 > 10) {
+  if (parsed.arg1 < 1 || parsed.arg1 > HISTORY_SIZE) {
     printf("Row number must be from 1 to 10\n");
     return;
   }
   // recalc
-  if (history[parsed.arg1 - 1] != NULL) {
-    history[parsed.arg1 - 1]
+  uint8_t index = parsed.arg1 - 1;
+  if (history[index] != NULL) { // history row exists
+    if (parse_operation(history[index])) {
+      execute_command();
+    }
+  } else {
+    printf("This history row is empty\n");
   }
 }
 
@@ -86,6 +94,10 @@ bool execute_command(void) {
       break;
     // divide
     case '/':
+      if (parsed.arg2 == 0) {
+        printf("Division by zero!\n");
+        return true;
+      }
       res = divide();
       break;
     // module
@@ -107,7 +119,7 @@ bool execute_command(void) {
   if (int_overflow(res)) {
     printf("Buffer overflow. Use smaller numbers\n");
   } else {
-    printf("%lli", res);
+    printf("%lli\n", res);
   };
 
   // clear content

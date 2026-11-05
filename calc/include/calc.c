@@ -1,6 +1,5 @@
 #include "calc.h"
-#include <calc_input.h>
-#include <stdint.h>
+#include "calc_input.h"
 #include <stdbool.h>
 
 int64_t add(void) {
@@ -28,10 +27,6 @@ int64_t multiply(void) {
 }
 
 int64_t divide(void) {
-  // Division by zero
-  if (parsed.arg2 == 0) return 0;
-  // overflow check
-  if (parsed.arg1 == INT64_MIN && parsed.arg2 == -1) return INT64_MAX;
   return parsed.arg1 / parsed.arg2;
 }
 
