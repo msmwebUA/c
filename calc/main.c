@@ -34,31 +34,13 @@ int main(void) {
     printf("> ");
     fflush(stdout); // ensures > appears immediately, even if stdout is buffered
 
-        // if (fgets(user_input, sizeof(user_input), stdin) == NULL) {
-        //   printf("Input error, try again\n");
-        //   continue;
-        // }
-        // // validate input length
-        // bool newline = false;
-        // for (uint8_t i = 0; user_input[i] != '\0'; i++) {
-        //   if (user_input[i] == '\n') {
-        //     newline = true;
-        //     break;
-        //   }
-        // }
-        // if (!newline) {
-        //   int c;
-        //   while ((c = getchar()) != '\n' && c != EOF); // discard remaining input if line was too long
-        //   printf("Input too long, try again\n");
-        //   continue;
-        // }
-
     // custom read input function fixes no-echo and new line char (\r \n) issues on Pico + input validatation
     int16_t n = read_line(user_input, sizeof(user_input));
     if (n < 0) {
       printf("Input too long, try again\n");
       continue;
     }
+    
     // parse input
     uint8_t input_len = remove_whitespaces(user_input); // remove all whitespaces, returns new len
     if (input_len > 0) {

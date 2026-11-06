@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define USER_INPUT_MAX_SIZE 23 // includes '\0' and newline
+#define USER_INPUT_MAX_SIZE 22 // includes '\0'
 #define HISTORY_SIZE 10
 
 extern char *history[HISTORY_SIZE]; // array of pointers to strings
