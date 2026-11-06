@@ -17,6 +17,7 @@ typedef struct {
 
 extern ParsedInput parsed; // var initialized in calc_input.c file, 'extern' tells to compiler "dont create another instance, var exists somewhere else" 
 
+uint16_t read_line(char *buf, uint8_t size);
 uint8_t remove_whitespaces(char *user_input);
 bool is_valid_command(const char command);
 bool is_valid_operator(const char operator);

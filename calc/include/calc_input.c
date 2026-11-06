@@ -23,6 +23,45 @@ ParsedInput parsed = {0}; // init instance with empty values
 
 char *history[HISTORY_SIZE] = {0};
 
+// Reads one line with echo and backspace support ()
+// Returns line length, or -1 if the line was too long.
+uint16_t read_line(char *buf, uint8_t size) {
+  uint8_t len = 0;
+  bool overflow = false;
+
+  while (true) {
+    int c = getchar();
+    if (c == EOF) continue;
+
+    if (c == '\r' || c == '\n') {
+      printf("\n");
+      break;
+    }
+
+    if (c == '\b' || c == 0x7F) { // backspace / delete
+      if (len > 0 && !overflow) {
+        len--;
+        printf("\b \b"); // erase char on screen
+        fflush(stdout);
+      }
+      continue;
+    }
+
+    if (c >= 32 && c < 127) { // printable characters only
+      if (len < size - 1) {
+        buf[len++] = (char)c;
+        putchar(c); // echo
+        fflush(stdout);
+      } else {
+        overflow = true; // keep reading until Enter, but drop chars
+      }
+    }
+  }
+
+  buf[len] = '\0';
+  return overflow ? -1 : (int16_t)len;
+}
+
 bool is_valid_command(const char command) {
   for (uint8_t i = 0; i < sizeof(commands); i++) {
     if (commands[i] == command) return true;
